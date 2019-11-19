@@ -1,3 +1,5 @@
+import functools
+
 # Adding mining reward for miners
 MINING_REWARD = 10  #hardcoding the value to 10 for now
 
@@ -21,15 +23,10 @@ def get_balance(participant):
     tx_sender = [[tx['amount'] for tx in block['transactions'] if tx['sender']==participant] for block in blockchain]
     open_tx_sender = [tx['amount'] for tx in open_transactions if tx['sender']==participant]
     tx_sender.append(open_tx_sender)
-    amount_sent = 0
-    for tx in tx_sender:
-        if len(tx)>0:
-            amount_sent += tx[0]
+    amount_sent = functools.reduce(lambda tx_sum, tx_amt: tx_sum + tx_amt[0] if len(tx_amt) > 0 else 0, tx_sender, 0)
     tx_recipient = [[tx['amount'] for tx in block['transactions'] if tx['recipient']==participant] for block in blockchain]
-    amount_received = 0
-    for tx in tx_recipient:
-        if len(tx)>0:
-            amount_received += tx[0]
+    amount_received = functools.reduce(lambda tx_sum, tx_amt: tx_sum + tx_amt[0] if len(tx_amt) > 0 else 0, tx_recipient, 0)
+    #return the total balance
     return amount_received - amount_sent
 
 
@@ -126,13 +123,7 @@ def verify_chain():
     return True
 
 def verify_transactions():
-    is_valid = True
-    for tx in open_transactions:
-        if verify_transaction(tx):
-            is_valid = True
-        else:
-            is_valid = False
-    return is_valid
+    return all([verify_transaction(tx) for tx in open_transactions])
 
 
 waiting_for_input = True
@@ -145,6 +136,7 @@ while waiting_for_input:
     print('2: Mine a new block')
     print('3: Output the blockchain blocks')
     print('4: Output Participants')
+    print('5: Check Transaction Validity')
     print('h: Manipulate the chain')
     print('q: Quit')
     user_choice = get_user_choice()
@@ -164,6 +156,11 @@ while waiting_for_input:
         print_blockchain_elements()
     elif user_choice == '4':
         print(participants)
+    elif user_choice == '5':
+        if verify_transactions():
+            print("All transactions are valid.")
+        else:
+            print("There are invalid transactions.")
     elif user_choice == 'h':
         # Make sure that you don't try to "hack" the blockchain if it's empty
         if len(blockchain) >= 1:
@@ -178,7 +175,7 @@ while waiting_for_input:
         print('Invalid blockchain!')
         # Break out of the loop
         break
-    print(get_balance('Ishan'))
+    print("Balance of {}: {:6.2f}".format("Ishan", get_balance('Ishan'))   #reserve 6 digits and align the value to the right and show only 2 decimal places
 else:
     print('User left!')
 
