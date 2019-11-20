@@ -91,7 +91,7 @@ def mine_block():
     block = {
         'previous_hash':hashed_block,
         'index':len(blockchain),
-        'transactions':open_transactions
+        'transactions':copied_transactions
     }
     blockchain.append(block)
     return True
@@ -123,7 +123,7 @@ def print_blockchain_elements():
 
 def verify_chain():
     """ Verify the current blockchain and return True if it's valid, False otherwise."""
-    for (index, block) in enumerate(blockcain):
+    for (index, block) in enumerate(blockchain):
         if index == 0:
             continue
         if block['previous_hash'] != hash_block(blockchain[index-1]):
@@ -172,7 +172,11 @@ while waiting_for_input:
     elif user_choice == 'h':
         # Make sure that you don't try to "hack" the blockchain if it's empty
         if len(blockchain) >= 1:
-            blockchain[0] = [2]
+            blockchain[0] = {
+                'previous_hash':'',
+                'index':0,
+                'transactions':[{'sender':'MrRobot', 'recipient':'Ishan', 'amount':100.0}]
+            }
     elif user_choice == 'q':
         # This will lead to the loop to exist because it's running condition becomes False
         waiting_for_input = False
@@ -183,7 +187,7 @@ while waiting_for_input:
         print('Invalid blockchain!')
         # Break out of the loop
         break
-    print("Balance of {}: {:6.2f}".format("Ishan", get_balance('Ishan'))   #reserve 6 digits and align the value to the right and show only 2 decimal places
+    print("Balance of {}: {:6.2f}".format("Ishan", get_balance('Ishan')))   #reserve 6 digits and align the value to the right and show only 2 decimal places 
 else:
     print('User left!')
 
