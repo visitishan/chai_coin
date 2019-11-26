@@ -1,4 +1,6 @@
 import functools
+import hashlib
+import json
 
 # Adding mining reward for miners
 MINING_REWARD = 10  #hardcoding the value to 10 for now
@@ -16,7 +18,8 @@ participants = {'Ishan'}    #adding users to a set to avoid duplicates
 
 
 def hash_block(block):
-    return '-'.join(str([block[key] for key in block]))
+    #return '-'.join(str([block[key] for key in block]))
+    return hashlib.sha256(json.dumps(block))
 
 
 def get_balance(participant):
