@@ -19,7 +19,7 @@ participants = {'Ishan'}    #adding users to a set to avoid duplicates
 
 def hash_block(block):
     #return '-'.join(str([block[key] for key in block]))
-    return hashlib.sha256(json.dumps(block))
+    return hashlib.sha256(json.dumps(block).encode()).hexdigest()
 
 
 def get_balance(participant):
