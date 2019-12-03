@@ -9,50 +9,60 @@ import hash_util
 MINING_REWARD = 10  #hardcoding the value to 10 for now
 
 # Initializing our (empty) blockchain list
-genesis_block = {
-        'previous_hash':'',
-        'index':0,
-        'transactions':[],
-        'proof':100
-    }
-blockchain = [genesis_block]
+blockchain = []
 open_transactions = []
 owner = 'Ishan'
 participants = {'Ishan'}    #adding users to a set to avoid duplicates
 
 
 def load_data():
-    with open('blockchain.txt', mode = 'r') as f:
-        file_content = f.readlines()
-        global blockchain
-        global open_transactions
-        blockchain = json.loads(file_content[0][:-1])
-        updated_blockchain = []
-        for block in blockchain:
-            updated_block = {
-                'previous_hash':block['previous_hash'],
-                'index':block['index'],
-                'proof':block['proof'],
-                'transactions': [OrderedDict([('sender',tx['sender']), ('recipient',tx['recipient']), ('amount',tx['amount'])]) for tx in block['transactions']]
+    global blockchain
+    global open_transactions    
+    try:
+        with open('blockchain.txt', mode = 'r') as f:
+            file_content = f.readlines()
+            blockchain = json.loads(file_content[0][:-1])
+            updated_blockchain = []
+            for block in blockchain:
+                updated_block = {
+                    'previous_hash':block['previous_hash'],
+                    'index':block['index'],
+                    'proof':block['proof'],
+                    'transactions': [OrderedDict([('sender',tx['sender']), ('recipient',tx['recipient']), ('amount',tx['amount'])]) for tx in block['transactions']]
+                }
+                updated_blockchain.append(updated_block)
+            blockchain = updated_blockchain
+            open_transactions = json.loads(file_content[1])
+            updated_transactions = []
+            for tx in open_transactions:
+                updated_transaction = OrderedDict([('sender',tx['sender']), ('recipient',tx['recipient']), ('amount',tx['amount'])])
+                updated_transactions.append(updated_transaction)
+            open_transactions = updated_transactions
+    except (IOError, IndexError):
+        # Initializing our (empty) blockchain list
+        genesis_block = {
+                'previous_hash':'',
+                'index':0,
+                'transactions':[],
+                'proof':100
             }
-            updated_blockchain.append(updated_block)
-        blockchain = updated_blockchain
-        open_transactions = json.loads(file_content[1])
-        updated_transactions = []
-        for tx in open_transactions:
-            updated_transaction = OrderedDict([('sender',tx['sender']), ('recipient',tx['recipient']), ('amount',tx['amount'])])
-            updated_transactions.append(updated_transaction)
-        open_transactions = updated_transactions
+        blockchain = [genesis_block]
+        open_transactions = []
+    finally :
+        print('clean kar diya!')
 
 
 load_data()
 
 
 def save_data():
-    with open('blockchain.txt', mode = 'w') as f:
-        f.write(json.dumps(blockchain))
-        f.write('\n')
-        f.write(json.dumps(open_transactions))
+    try:
+        with open('blockchain.txt', mode = 'w') as f:
+            f.write(json.dumps(blockchain))
+            f.write('\n')
+            f.write(json.dumps(open_transactions))
+    except IOError:
+        print('Saving Failed')
 
 
 def valid_proof(transactions,last_hash,proof):
