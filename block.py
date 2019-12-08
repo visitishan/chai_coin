@@ -7,3 +7,6 @@ class Block:
 		self.timestamp = time() if timestamp is None else timestamp
 		self.transactions = transactions
 		self.proof = proof
+
+	def __repr__(self):
+		return str(self.__dict__)
