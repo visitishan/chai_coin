@@ -17,11 +17,11 @@ Chai Coin is a peer-to-peer cryptocurrency that enables instant and near-zero co
 
 1.	Clone the repository in your local machine.
 
-2.	Now open cmd/terminal and run the node.py file with “-p <custom port number>” in the argument. The default port is set to 5000. But it is recommended to use a different port number to avoid any issues, especially when you’re running multiple nodes on the same machine.
+2.	Now open cmd/terminal and run the node.py file with “-p \<custom port number\>” in the argument. The default port is set to 5000. But it is recommended to use a different port number to avoid any issues, especially when you’re running multiple nodes on the same machine.
   
   ![Screenshot](screenshots/starting_node.PNG)
 
-3.	Once the flask app is running, open the following link in your browser – http://localhost:<your port number> which in my case is http://localhost:5001. For the demo, I’ve started another instance on port 5000 as well. The page will look like -
+3.	Once the flask app is running, open the following link in your browser – http://localhost:\<your port number\> which in my case is http://localhost:5001. For the demo, I’ve started another instance on port 5000 as well. The page will look like -
 
   ![Screenshot](screenshots/homepage.PNG)
 
